@@ -1,0 +1,9 @@
+.content {
+    margin: 40px;
+}
+
+.registration-form {
+    border: 1px solid #ced4da;
+    padding: 40px;
+    border-radius: 20px;
+}
