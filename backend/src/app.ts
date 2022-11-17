@@ -23,8 +23,8 @@ const httpsOptions = {
 };
 const server = https.createServer(httpsOptions, app).listen(PORT, () => {
 	console.log("server running at " + PORT);
+	connectToDB();
 });
 // app.listen(PORT, () => {
 // 	console.log(`Server up and running on port ${PORT}`);
-// 	connectToDB();
 // });
