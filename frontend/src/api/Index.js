@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:5000/api" });
+const API = axios.create({ baseURL: "https://localhost:5000/api" });
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
@@ -12,10 +12,10 @@ API.interceptors.request.use((req) => {
 
 //users auth urls
 export const login = (credentials) =>
-  axios.post("http://localhost:5000/api/sessions", credentials);
+  axios.post("https://localhost:5000/api/sessions", credentials);
 
 export const register = (user) =>
-  axios.post("http://localhost:5000/api/users", user);
+  axios.post("https://localhost:5000/api/users", user);
 
 // Portal users
 export const fetchUsers = () => API.get("/users");
