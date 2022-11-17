@@ -14,7 +14,7 @@ export async function createSessionHandler(req: Request<{}, {}, CreateSessionInp
 	const user = await findUserByEmail(email);
 
 	if (!user) {
-		return res.send(message);
+		return res.status(401).send(message);
 	}
 
 	const isValid = await user.validatePassword(password);
@@ -32,6 +32,7 @@ export async function createSessionHandler(req: Request<{}, {}, CreateSessionInp
 	// send the tokens
 
 	return res.send({
+		user,
 		accessToken,
 		refreshToken,
 	});

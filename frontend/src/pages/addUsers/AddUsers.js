@@ -1,53 +1,162 @@
-import React from "react";
-import "../addUsers/AddUsers.css";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const AddUsers = () => {
-    return ( 
-        <section className="content">
-            <div className="registration-form">
-                        <div className="row d-flex justify-content-center">
-                            <div className="col-lg-8">
-                                <h2 className="fw-bold mb-3">Add New Users</h2>
-                                <form>
-                                    <div className="row">
-                                        <div className="col-md-6 mb-4">
-                                            <div className="form-outline">
-                                                <label className="form-label">First name</label>
-                                                <input type="text" id="form3Example1" className="form-control" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 mb-4">
-                                            <div className="form-outline">                                                
-                                                <label className="form-label">Last name</label>
-                                                <input type="text" id="form3Example2" className="form-control" required />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="form-outline mb-4">
-                                        <label className="form-label">Username</label>
-                                        <input type="Username" id="Username" className="form-control" required />
-                                    </div>
-                                    <div className="form-outline mb-4">
-                                        <label className="form-label">Email address</label>
-                                        <input type="email" id="form3Example3" className="form-control" required />
-                                    </div>
-                                    <div className="form-outline mb-4">
-                                        <label className="form-label">Role</label>
-                                        <input type="Role" id="Role" className="form-control" required />
-                                    </div>
-                                    <div className="form-outline mb-4">
-                                        <label className="form-label">Password</label>
-                                        <input type="password" id="form3Example4" className="form-control" required />
-                                    </div>
-                                    <button type="submit" className="btn btn-primary btn-block mb-4 btnNewUser">
-                                    Add New User
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                </div>
-            </section>
-     );
+import { Form, Input, Button, message, Select } from "antd";
+
+import { getUser, register as registerUser } from "../../actions/auth";
+
+export default function Register() {
+    const dispatch = useDispatch();
+    const { Option } = Select;
+
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
+
+    const admin = useSelector((state) => state.auth.user);
+
+    const tailFormItemLayout = {
+        wrapperCol: {
+            xs: {
+                span: 24,
+                offset: 0,
+            },
+            sm: {
+                span: 16,
+                offset: 8,
+            },
+        },
+    };
+
+    const [form] = Form.useForm();
+
+    const handleSubmit = async (values) => {
+        setLoading(true);
+        const res = await dispatch(registerUser(values));
+        if (res.status === 200) {
+            message.success("Registered Successfully");
+            form.resetFields();
+        } else if (res.response.status === 409) {
+            message.error("User already exits. Please Login");
+        } else {
+            message.error("Register Error");
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div style={{ width: "400px", margin: "auto" }}>
+            <h2 style={{ textAlign: "center" }}>Register User</h2>
+            <Form
+                layout="vertical"
+                form={form}
+                name="register"
+                onFinish={handleSubmit}
+                scrollToFirstError
+            >
+                <Form.Item
+                    name="firstName"
+                    label="FirstName"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your First Name!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    name="lastName"
+                    label="Last Name"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your Last Name!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    name="email"
+                    label="E-mail"
+                    rules={[
+                        {
+                            type: "email",
+                            message: "The input is not valid E-mail!",
+                        },
+                        {
+                            required: true,
+                            message: "Please input your E-mail!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    name="password"
+                    label="Password"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your password!",
+                        },
+                    ]}
+                    hasFeedback
+                >
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                    name="passwordConfirmation"
+                    label="Confirm Password"
+                    dependencies={["password"]}
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please confirm your password!",
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue("password") === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(
+                                    new Error("The two passwords that you entered do not match!")
+                                );
+                            },
+                        }),
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                    name="userType"
+                    label="Role"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select a role!",
+                        },
+                    ]}
+                >
+                    <Select placeholder="select role">
+                        <Option value="Worker">Worker</Option>
+                        <Option value="Manager">Manager</Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item {...tailFormItemLayout}>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                        Register
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div>
+    );
 }
- 
-export default AddUsers;

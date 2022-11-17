@@ -1,54 +1,132 @@
-import React from "react";
-import '../login/Login.css';
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { login as loginUser } from "../../actions/auth";
+import { useDispatch } from "react-redux";
+import { Form, Input, Button, message } from "antd";
+import { ROLES } from "../../constants/Constants";
+import "../../index.css";
+// import LoginImage from "../../Images/draw2.png";
 
+function Login() {
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const [loading, setLoading] = useState(false);
 
-const Login = () => {
-    return ( 
-        <section className="content">
-            <div className="registration-form">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-lg-8">
-                        <h2 className="fw-bold mb-3">Login to the Account</h2>
-                            <form>
-                                <div className="form-outline mb-4">
-                                    <label className="form-label">Email</label>
-                                    <input 
-                                        type="email" 
-                                        id="email" 
+    const handleSubmit = async (values) => {
+        setLoading(true);
+        const res = await dispatch(loginUser(values));
+        console.log(res);
+        if (res.status === 200) {
+            message.success("Logged in  Successfully");
+            if (res.data.user.userType === ROLES.ADMIN) {
+                history.push("/register");
+            } else {
+                history.push("/files");
+            }
+        } else {
+            message.error("Login Error");
+        }
+        setLoading(false);
+    };
+
+    const tailFormItemLayout = {
+        wrapperCol: {
+            xs: {
+                span: 24,
+                offset: 0,
+            },
+            sm: {
+                span: 16,
+                offset: 8,
+            },
+        },
+    };
+
+    const [form] = Form.useForm();
+
+    return (
+        <div>
+            <br />
+            <br />
+            <div
+                style={{
+                    width: "1200px",
+                    margin: "auto",
+                    border: "2px solid #9fd1ff",
+                    borderRadius: "10px",
+                    padding: "30px flex",
+                    alignContent: "space-around",
+                }}
+            >
+                <div>
+                    <div className="container-fluid">
+                        <div className="row" style={{ padding: "40px" }}>
+                            <div className="col-sm-6 px-2 d-none d-sm-block">
+                                {/* <img
+                                    src={LoginImage}
+                                    alt="Login image"
+                                    className="w-100 vh-90"
+                                /> */}
+                            </div>
+                            <div className="col-sm-6" style={{ padding: "30px 130px" }}>
+                                <h2 style={{ textAlign: "center", color: "#1d3ffa" }}>Login</h2>
+                                <Form
+                                    layout="vertical"
+                                    form={form}
+                                    name="register"
+                                    onFinish={handleSubmit}
+                                    scrollToFirstError
+                                >
+                                    <Form.Item
                                         name="email"
-                                        pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,}$"
-                                        placeholder="test@gmail.com"
-                                        className="form-control" required />
-                                </div>
-                                <div className="form-outline mb-4">
-                                    <label className="form-label">Password</label>
-                                    <input 
-                                        type="password" 
-                                        id="password" 
-                                        className="form-control" 
-                                        placeholder="*************"
-                                        required />
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col d-flex justify-content-center">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                                            <label className="form-check-label" for="form2Example31"> Remember me </label>
+                                        label="E-mail"
+                                        rules={[
+                                            {
+                                                type: "email",
+                                                message: "The input is not valid E-mail!",
+                                            },
+                                            {
+                                                required: true,
+                                                message: "Please input your E-mail!",
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="password"
+                                        label="Password"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: "Please input your password!",
+                                            },
+                                        ]}
+                                        hasFeedback
+                                    >
+                                        <Input.Password />
+                                    </Form.Item>
+
+                                    <Form.Item {...tailFormItemLayout}>
+                                        <div className="center">
+                                            <Button
+                                                style={{ padding: "0 130px" }}
+                                                type="primary"
+                                                htmlType="submit"
+                                                loading={loading}
+                                            >
+                                                Login
+                                            </Button>
                                         </div>
-                                    </div>
-                                    <div className="col">
-                                        <a href="#!">Forgot password?</a>
-                                    </div>
-                                </div>    
-                                    <button type="submit" className="btn btn-primary btn-block mb-4 btnLogin">
-                                        Login
-                                    </button>
-                                </form>
+                                    </Form.Item>
+                                </Form>
                             </div>
                         </div>
+                    </div>
                 </div>
-            </section>
-     );
+            </div>
+        </div>
+    );
 }
- 
+
 export default Login;

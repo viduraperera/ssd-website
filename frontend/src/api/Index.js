@@ -1,29 +1,31 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:3000/api" });
+const API = axios.create({ baseURL: "http://localhost:5000/api" });
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
-    req.headers.Authorization = `Bearer ${
-      JSON.parse(localStorage.getItem("profile")).payload.token
-    }`;
+    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem("profile")).accessToken
+      }`;
   }
   return req;
 });
 
 //users auth urls
 export const login = (credentials) =>
-  axios.post("http://localhost:3000/api/login", credentials);
+  axios.post("http://localhost:5000/api/sessions", credentials);
 
 export const register = (user) =>
-  axios.post("http://localhost:3000/api/user", user);
+  axios.post("http://localhost:5000/api/users", user);
 
 // Portal users
-export const fetchUsers = () => API.get("/user");
-export const fetchUser = (id) => API.get(`/user/${id}`);
+export const fetchUsers = () => API.get("/users");
+export const fetchUser = (id) => API.get(`/users/${id}`);
 export const deleteUser = (userID) => API.delete(`/user/${userID}`);
 export const updateUser = (user) => API.patch(`/user/${user.id}`, user);
 export const updatePassword = (user) =>
   API.patch(`/user/resetPassword/${user.id}`, user);
 export const updateProfile = (user) =>
   API.patch(`/user/profile/${user.id}`, user);
+
+// Messages
+export const addMessage = (message) => API.post('/message', message)
