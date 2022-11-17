@@ -45,7 +45,7 @@ function AddFiles() {
         const payload = {
             ...values,
             filePath,
-            user: user.id
+            user: user._id
         }
         const res = await dispatch(addMessage(payload))
         if (res.status === 201) {
@@ -62,7 +62,7 @@ function AddFiles() {
     const props = {
         name: 'file',
         multiple: false,
-        action: 'http://localhost:5000/api/files',
+        action: 'https://localhost:5000/api/files',
         maxCount: 1,
         onChange(info) {
             const { status } = info.file;
