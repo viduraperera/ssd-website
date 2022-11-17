@@ -46,29 +46,20 @@ function Login() {
 
     return (
         <div>
-            <br />
-            <br />
             <div
                 style={{
-                    width: "1200px",
-                    margin: "auto",
+                    width: "auto",
+                    margin: "100px",
                     border: "2px solid #9fd1ff",
-                    borderRadius: "10px",
-                    padding: "30px flex",
-                    alignContent: "space-around",
+                    paddingBlockStart: "20px",
+                    paddingBlockEnd: "20px",
+                    alignContent: "center",
                 }}
             >
                 <div>
                     <div className="container-fluid">
-                        <div className="row" style={{ padding: "40px" }}>
-                            <div className="col-sm-6 px-2 d-none d-sm-block">
-                                {/* <img
-                                    src={LoginImage}
-                                    alt="Login image"
-                                    className="w-100 vh-90"
-                                /> */}
-                            </div>
-                            <div className="col-sm-6" style={{ padding: "30px 130px" }}>
+                        <div>
+                            <div className="" style={{ padding: "30px" }}>
                                 <h2 style={{ textAlign: "center", color: "#1d3ffa" }}>Login</h2>
                                 <Form
                                     layout="vertical"
