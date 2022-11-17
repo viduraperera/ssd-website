@@ -1,5 +1,4 @@
 import { getModelForClass, modelOptions, prop, Severity, pre, DocumentType, index } from "@typegoose/typegoose";
-import { nanoid } from "nanoid";
 import argon2 from "argon2";
 
 export const privateFields = ["password", "__v"];
@@ -37,8 +36,8 @@ export class User {
 	@prop({ required: true })
 	password: string;
 
-	@prop({ default: false })
-	verified: boolean;
+	@prop({ required: true })
+	userType: string;
 
 	async validatePassword(this: DocumentType<User>, candidatePassword: string) {
 		try {
