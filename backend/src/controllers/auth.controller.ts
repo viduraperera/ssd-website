@@ -1,6 +1,6 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Request, Response } from "express";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 // import { TOKEN_TYPE } from "../enums";
 import { CreateSessionInput } from "../schemas/auth.schema";
 import { findSessionById, signAccessToken, signRefreshToken } from "../services/auth.service";
@@ -31,8 +31,9 @@ export async function createSessionHandler(req: Request<{}, {}, CreateSessionInp
 
 	// send the tokens
 
+	const parsedUser = omit(user.toJSON(), ["password"]);
 	return res.send({
-		user,
+		user: parsedUser,
 		accessToken,
 		refreshToken,
 	});
