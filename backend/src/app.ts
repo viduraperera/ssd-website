@@ -4,9 +4,7 @@ import cors from "cors";
 import connectToDB from "./utils/database";
 import router from "./routes";
 import deserializeUser from "./middleware/deserializeUser";
-// import fs from "fs";
 import https from "https";
-// import path from "path";
 const fs = require("fs");
 const path = require("path");
 
